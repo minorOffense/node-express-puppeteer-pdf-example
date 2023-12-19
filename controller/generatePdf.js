@@ -8,7 +8,8 @@ const generatePdf = async (type, payload) => {
 
   if (type === 'url') {
     const page = await browser.newPage();
-    await page.goto(payload, {waitUntil: 'networkidle'});
+    await page.goto(payload);
+    await page.emulateMediaType("print");
     const pdf = await page.pdf({printBackground: true});
     await browser.close();
     // Return Buffer
