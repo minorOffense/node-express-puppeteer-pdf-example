@@ -10,7 +10,7 @@ const generatePdf = async (type, payload) => {
     const page = await browser.newPage();
     await page.goto(payload);
     await page.emulateMediaType("print");
-    const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true, displayHeaderFooter: false });
+    const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true, displayHeaderFooter: false, tagged: true });
     await browser.close();
     // Return Buffer
     return pdf;
