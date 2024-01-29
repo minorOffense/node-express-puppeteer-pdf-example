@@ -1,4 +1,6 @@
 const puppeteer = require("puppeteer");
+const exiftool = require('node-exiftool')
+const {writeFileSync, readFileSync, read} = require('node:fs');
 
 const generatePdf = async (type, payload) => {
   // Browser actions & buffer creator
@@ -12,8 +14,21 @@ const generatePdf = async (type, payload) => {
     await page.emulateMediaType("print");
     const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true, displayHeaderFooter: false, tagged: true });
     await browser.close();
+
+    // Add metadata to the file before returning.
+    const ep = new exiftool.ExiftoolProcess('/usr/bin/exiftool')
+    // Write the buffer to a temporary file.
+    const tmpFilePath = '/tmp/temp.pdf'
+    writeFileSync(tmpFilePath, pdf)
+    const tmpFileBuffer = readFileSync(tmpFilePath)
+
+    // Add XML dc:title metadata to the file.
+    await ep.open()
+      .then(() => ep.writeMetadata(tmpFilePath, {Title: 'Contract History Letter'}))
+      .then(() => ep.close())
+    
     // Return Buffer
-    return pdf;
+    return readFileSync(tmpFilePath);
   }
 
   if (type === 'base64') {

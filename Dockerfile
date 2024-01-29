@@ -8,7 +8,7 @@ FROM node:lts-buster
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update --allow-insecure-repositories --allow-unauthenticated
 RUN apt install -y ca-certificates curl gnupg
-RUN  apt-get install -y wget gnupg ca-certificates procps libxss1 \
+RUN  apt-get install -y wget gnupg ca-certificates procps exiftool libxss1 \
      && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
      && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
      && apt-get update \
