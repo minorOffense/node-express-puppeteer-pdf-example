@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const exiftool = require('node-exiftool')
-const {writeFileSync, readFileSync, read} = require('node:fs');
+const { writeFileSync, readFileSync } = require('node:fs');
 
 const generatePdf = async (type, payload) => {
   // Browser actions & buffer creator
@@ -24,9 +24,9 @@ const generatePdf = async (type, payload) => {
 
     // Add XML dc:title metadata to the file.
     await ep.open()
-      .then(() => ep.writeMetadata(tmpFilePath, {Title: 'Contract History Letter'}))
+      .then(() => ep.writeMetadata(tmpFilePath, { Title: 'Contract History Letter' }))
       .then(() => ep.close())
-    
+
     // Return Buffer
     return readFileSync(tmpFilePath);
   }
