@@ -16,16 +16,21 @@ const generatePdf = async (type, payload) => {
     await browser.close();
 
     // Add metadata to the file before returning.
-    const ep = new exiftool.ExiftoolProcess('/usr/bin/exiftool')
+    const ep = new exiftool.ExiftoolProcess('/usr/bin/exiftool');
     // Write the buffer to a temporary file.
-    const tmpFilePath = '/tmp/temp.pdf'
-    writeFileSync(tmpFilePath, pdf)
-    const tmpFileBuffer = readFileSync(tmpFilePath)
+    const tmpFilePath = '/tmp/temp.pdf';
+    writeFileSync(tmpFilePath, pdf);
+    const tmpFileBuffer = readFileSync(tmpFilePath);
+    const htmlElement = await Page.$('html');
+
+    // Detect the language.
+    const language = htmlElement.getAttribute('lang') || "en";
+    const title = language.startsWith('fr') ? "Contract History Letter FR" : "Contract History Letter";
 
     // Add XML dc:title metadata to the file.
     await ep.open()
-      .then(() => ep.writeMetadata(tmpFilePath, { Title: 'Contract History Letter' }))
-      .then(() => ep.close())
+      .then(() => ep.writeMetadata(tmpFilePath, { Title: title }))
+      .then(() => ep.close());
 
     // Return Buffer
     return readFileSync(tmpFilePath);
