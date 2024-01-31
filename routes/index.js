@@ -8,10 +8,15 @@ router.get("/", (_, res) => {
 });
 
 router.get("/generate-pdf", async (req, res) => {
-  let result = await generatePdf('url', req.query.url);
-  res.attachment(`node-express-puppeteer-pdf-example.pdf`);
-  res.contentType("application/pdf");
-  res.send(result);
+  try {
+    let result = await generatePdf('url', req.query.url);
+    res.attachment(`node-express-puppeteer-pdf-example.pdf`);
+    res.contentType("application/pdf");
+    res.send(result);
+  }
+  catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 router.post("/generate-pdf", async (req, res) => {

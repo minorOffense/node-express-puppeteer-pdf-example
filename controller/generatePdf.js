@@ -11,6 +11,7 @@ const generatePdf = async (type, payload) => {
   if (type === 'url') {
     const page = await browser.newPage();
     await page.goto(payload);
+    const language = await page.evaluate('document.querySelector("html").getAttribute("lang")') || 'en';
     await page.emulateMediaType("print");
     const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true, displayHeaderFooter: false, tagged: true });
     await browser.close();
@@ -21,10 +22,8 @@ const generatePdf = async (type, payload) => {
     const tmpFilePath = '/tmp/temp.pdf';
     writeFileSync(tmpFilePath, pdf);
     const tmpFileBuffer = readFileSync(tmpFilePath);
-    const htmlElement = await Page.$('html');
 
     // Detect the language.
-    const language = htmlElement.getAttribute('lang') || "en";
     const title = language.startsWith('fr') ? "Contract History Letter FR" : "Contract History Letter";
 
     // Add XML dc:title metadata to the file.
