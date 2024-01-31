@@ -24,7 +24,7 @@ const generatePdf = async (type, payload) => {
     const tmpFileBuffer = readFileSync(tmpFilePath);
 
     // Detect the language.
-    const title = language.startsWith('fr') ? "Contract History Letter FR" : "Contract History Letter";
+    const title = language.startsWith('fr') ? "Lettre des contrats octroyés" : "Contract History Letter";
 
     // Add XML dc:title metadata to the file.
     await ep.open()
