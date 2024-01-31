@@ -17,7 +17,7 @@ const generatePdf = async (type, payload) => {
     await browser.close();
 
     // Add metadata to the file before returning.
-    const ep = new exiftool.ExiftoolProcess('/usr/local/bin/exiftool');
+    const ep = new exiftool.ExiftoolProcess('/usr/bin/exiftool');
     // Write the buffer to a temporary file.
     const tmpFilePath = '/tmp/temp.pdf';
     writeFileSync(tmpFilePath, pdf);
