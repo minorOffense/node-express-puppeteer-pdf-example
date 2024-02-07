@@ -24,17 +24,22 @@ const generatePdf = async (type, payload) => {
     const tmpFileBuffer = readFileSync(tmpFilePath);
 
     // Detect the language.
-    const title = language.startsWith('fr') ? "Lettre des contrats octroyés" : "Contract History Letter";
+    const title = language.startsWith('fr') ? "Lettre des contrats octroyés de Services publics et Approvisionnement Canada" : "Contract history letter from Public Services and Procurement Canada";
     const siteName = language.startsWith('fr') ? "AchatsCanada" : "CanadaBuys";
+    const author = language.startsWith('fr') ? "Services publics et Approvisionnement Canada" : "Public Services and Procurement Canada";
+    const subject = language.startsWith('fr') ? "Une lettre qui répertorie l'historique de vos contrats avec Services publics et Approvisionnement Canada." : "A letter that lists your contract history with Public Services and Procurement Canada.";
+    const keywords = language.startsWith('fr') ? "Contrat, historique, lettre, Gouvernement du Canada, fournisseur, entreprise, contrats octroyés" : "contract, history, letter, Government of Canada, company, supplier, contracts awarded";
+    
     // Add XML dc:title metadata to the file.
     await ep.open()
       .then(() => ep.writeMetadata(tmpFilePath, {
         Title: title,
         Producer: siteName,
         Creator: siteName,
-        'Content Creator': siteName,
-        Author: siteName,
-        Subject: title }))
+        'Content Creator': author,
+        Author: author,
+        Keywords: keywords,
+        Subject: subject }))
       .then(() => ep.close());
 
     // Return Buffer
