@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const exiftool = require('node-exiftool')
+const crypto = require('crypto')
 const { writeFileSync, readFileSync } = require('node:fs');
 
 const generatePdf = async (type, payload) => {
@@ -10,6 +11,9 @@ const generatePdf = async (type, payload) => {
 
   if (type === 'url') {
     const page = await browser.newPage();
+    // Hash the request string to generate a unique temp file.
+    const shasum = crypto.createHash('sha1')
+    shasum.update(payload);
     await page.goto(payload);
     const language = await page.evaluate('document.querySelector("html").getAttribute("lang")') || 'en';
     await page.emulateMediaType("print");
@@ -19,7 +23,8 @@ const generatePdf = async (type, payload) => {
     // Add metadata to the file before returning.
     const ep = new exiftool.ExiftoolProcess('/usr/bin/exiftool');
     // Write the buffer to a temporary file.
-    const tmpFilePath = '/tmp/temp.pdf';
+    const tmpFileName = shasum.digest('hex') + '.pdf';
+    const tmpFilePath = '/tmp/' + tmpFileName;
     writeFileSync(tmpFilePath, pdf);
     const tmpFileBuffer = readFileSync(tmpFilePath);
 
